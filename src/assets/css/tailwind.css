@@ -1,0 +1,93 @@
+/* 1. Tailwind v4 Directives & Plugins */
+@import "tailwindcss";
+@plugin "daisyui" {
+  /* Mendaftarkan tema Zenshin Core */
+  themes: night, luxury, dracula, emerald, cupcake, nord, halloween, retro, synthwave, coffee;
+  logs: false;
+}
+
+/* 2. Konfigurasi Tema v4 */
+@theme {
+  --font-sans: "Inter", "ui-sans-serif", "system-ui", "sans-serif";
+  
+  /* Override warna global Zenshin */
+  --color-primary: #38bdf8;
+  --color-accent: #f472b6;
+}
+
+/* 3. Global Styles & High-Contrast Optimization */
+@layer base {
+  :root {
+    font-family: var(--font-sans);
+  }
+
+  body {
+    @apply antialiased min-h-screen transition-colors duration-300;
+    
+    /* BACKGROUND: Sesuai variabel base-100 tema */
+    background-color: var(--fallback-b1, oklch(var(--b1)));
+    
+    /** * TEKS OTOMATIS (SULTAN CONTRAST):
+     * Memaksa warna teks utama 95% lebih pekat dari standar agar 
+     * tema putih (Emerald/Cupcake) tidak terlihat pudar atau abu-abu.
+     */
+    color: color-mix(in srgb, var(--fallback-bc, oklch(var(--bc))), black 5%);
+  }
+
+  /* Memaksa elemen teks krusial menggunakan warna tajam */
+  h1, h2, h3, h4, h5, h6, p, li, span, label, div {
+    color: currentColor;
+    @apply transition-colors duration-300;
+  }
+
+  /* Judul dibuat sedikit lebih berani */
+  h1, h2, h3 {
+    @apply font-black tracking-tighter;
+  }
+
+  /* Link: Selalu menggunakan warna primary agar standout */
+  a {
+    @apply transition-all duration-200;
+    color: var(--fallback-p, oklch(var(--p)));
+  }
+}
+
+/* 4. Utilitas Kustom Zenshin Core */
+@layer components {
+  /* Card adaptif dengan border yang lebih tegas di tema terang */
+  .hover-card {
+    @apply transition-all duration-300 border;
+    border-color: color-mix(in srgb, var(--fallback-bc, oklch(var(--bc))) 10%, transparent);
+    background-color: var(--fallback-b2, oklch(var(--b2)));
+    color: currentColor;
+  }
+  
+  .hover-card:hover {
+    @apply -translate-y-1 shadow-2xl;
+    border-color: var(--fallback-p, oklch(var(--p)));
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  }
+
+  /**
+   * ZENSHIN GLASS V2: 
+   * Background lebih tebal (85%) agar teks hitam di tema putih 
+   * atau teks putih di tema gelap tidak 'bertabrakan' dengan konten di bawahnya.
+   */
+  .zenshin-glass {
+    @apply backdrop-blur-xl;
+    background-color: color-mix(in srgb, var(--fallback-b1, oklch(var(--b1))) 85%, transparent);
+    border: 1px solid color-mix(in srgb, var(--fallback-bc, oklch(var(--bc))) 20%, transparent);
+    color: currentColor;
+  }
+
+  /* Helper untuk teks pendukung yang tetap bisa dibaca (65% Contrast) */
+  .text-zenshin-muted {
+    color: color-mix(in srgb, var(--fallback-bc, oklch(var(--bc))) 65%, transparent);
+  }
+
+  /* Badge fix agar tidak pudar di tema putih */
+  .badge-outline {
+    @apply border-2;
+    border-color: color-mix(in srgb, currentColor 30%, transparent);
+  }
+}
